@@ -188,8 +188,7 @@ tune_fundamental <- function(fundamental) {
   peaks.df <- if (file.exists(peaks_path)) read_csv(peaks_path, show_col_types = FALSE) else tibble(offc_fundamental = character(), variable = character(), peak_rank = integer(), lag = integer(), correlation = numeric())
   if (nrow(peaks.df) == 0) {
     spec_note <- "WARNING: no CCF screener spec loaded - candidates fall back to +-2 around the current lags"
-    cat(glue("  [tune] {spec_note}"), "
-", sep = "")
+    cat(glue("  [tune] {spec_note}\n"))
   } else {
     spec_note <- "candidates: CCF-guided (screener peaks + incumbent)"
   }
@@ -224,8 +223,7 @@ tune_fundamental <- function(fundamental) {
       wape_pct = if (is.na(scored$wape)) NA_real_ else round(scored$wape, 4),
       winner = FALSE)
     score_txt <- if (is.na(scored$rmse)) "FAIL" else format(scored$rmse, scientific = FALSE, trim = TRUE)
-    cat(glue("  [tune] {phase} eval {eval_count}: {format_lags(lags)} -> RMSE {score_txt} (WAPE {wape_text(scored$wape)})"), "
-", sep = "")
+    cat(glue("  [tune] {phase} eval {eval_count}: {format_lags(lags)} -> RMSE {score_txt} (WAPE {wape_text(scored$wape)})\n"))
     scored
   }
   # baseline - the incumbent set, scored before any candidate is tried
@@ -297,12 +295,9 @@ tune_fundamental <- function(fundamental) {
   headline <- glue("TUNE DONE for {fundamental} ({search_runs} search runs). Baseline RMSE={format(baseline_score, digits = 4)} (WAPE {wape_text(baseline_wape)}) -> search winner: {format_lags(best)} with RMSE={format(best_score, digits = 4)} (WAPE {wape_text(best_wape)}).")
   if (!identical(as.numeric(adopted), as.numeric(best))) headline <- glue("{headline} Adopted: {format_lags(adopted)} (gate rejection - see log).")
   completed <- TRUE
-  cat(glue("{headline}"), "
-", sep = "")
-  cat(glue("Backup of the pre-tune config: {backup_name}"), "
-", sep = "")
-  cat(glue("Tune history appended to tune_history.csv ({nrow(history.df)} evaluations)."), "
-", sep = "")
+  cat(glue("{headline}\n"))
+  cat(glue("Backup of the pre-tune config: {backup_name}\n"))
+  cat(glue("Tune history appended to tune_history.csv ({nrow(history.df)} evaluations).\n"))
   cat(glue_collapse(log_lines, sep = "\n"), "\n", sep = "")
   invisible(history.df)
 }
